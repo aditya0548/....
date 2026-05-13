@@ -92,12 +92,45 @@ export function AiAgentsSection() {
           <div className="relative h-[600px] flex items-center justify-center">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="grid grid-cols-2 gap-6 relative">
+            {/* Animated Connection Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }}>
+              {AGENTS.map((agent, i) => {
+                const isLeft = i % 2 === 0;
+                const isTop = i < 2;
+                const startX = '50%';
+                const startY = '50%';
+                const endX = isLeft ? '25%' : '75%';
+                const endY = isTop ? '25%' : '75%';
+
+                return (
+                  <motion.path
+                    key={`line-${agent.id}`}
+                    d={`M ${startX} ${startY} L ${endX} ${endY}`}
+                    stroke="url(#lineGradient)"
+                    strokeWidth="2"
+                    fill="none"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    whileInView={{ pathLength: 1, opacity: 0.5 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, delay: 0.5 + agent.delay }}
+                  />
+                );
+              })}
+              <defs>
+                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
+                  <stop offset="50%" stopColor="#8b5cf6" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#ec4899" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div className="grid grid-cols-2 gap-6 relative z-10">
               {AGENTS.map((agent) => (
                 <motion.div
                   key={agent.id}
-                  initial={{ opacity: 0, y: agent.yOffset + 50 }}
-                  whileInView={{ opacity: 1, y: agent.yOffset }}
+                  initial={{ opacity: 0, y: agent.yOffset + 50, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: agent.yOffset, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{
                     duration: 0.8,
@@ -105,31 +138,54 @@ export function AiAgentsSection() {
                     type: "spring",
                     stiffness: 100,
                   }}
-                  animate={{
-                    y: [agent.yOffset, agent.yOffset - 15, agent.yOffset],
-                  }}
-                  className={`w-48 h-48 rounded-2xl bg-gradient-to-br ${agent.color} border ${agent.borderColor} backdrop-blur-xl p-6 flex flex-col items-center justify-center gap-4 shadow-2xl relative group`}
                 >
-                  <div className={`absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl blur-md pointer-events-none`} />
-                  <agent.icon className={`w-10 h-10 ${agent.textColor}`} />
-                  <span className="font-semibold text-white/90 text-center">{agent.name}</span>
-
-                  {/* Activity Indicator */}
-                  <div className="absolute top-4 right-4 flex gap-1">
+                  <motion.div
+                    animate={{
+                      y: [0, -10, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: agent.delay,
+                    }}
+                    className={`w-48 h-48 rounded-2xl bg-gradient-to-br ${agent.color} border ${agent.borderColor} backdrop-blur-xl p-6 flex flex-col items-center justify-center gap-4 shadow-2xl relative group overflow-hidden`}
+                  >
+                    {/* Pulsing background glow */}
                     <motion.div
-                      className={`w-1.5 h-1.5 rounded-full ${agent.textColor.replace('text-', 'bg-')}`}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 1.5, repeat: Infinity, delay: Math.random() * 2 }}
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: agent.delay }}
+                      className={`absolute inset-0 bg-gradient-to-br ${agent.color} blur-2xl opacity-50`}
                     />
-                  </div>
+
+                    <div className={`absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none`} />
+                    <agent.icon className={`w-10 h-10 ${agent.textColor} relative z-10 group-hover:scale-110 transition-transform duration-300`} />
+                    <span className="font-semibold text-white/90 text-center relative z-10">{agent.name}</span>
+
+                    {/* Activity Indicator */}
+                    <div className="absolute top-4 right-4 flex gap-1 z-10">
+                      <motion.div
+                        className={`w-1.5 h-1.5 rounded-full ${agent.textColor.replace('text-', 'bg-')}`}
+                        animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.2, 0.8] }}
+                        transition={{ duration: 1.5, repeat: Infinity, delay: Math.random() * 2 }}
+                      />
+                    </div>
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
 
             {/* Central Hub Connection Lines (Abstract Representation) */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-xl flex items-center justify-center z-20">
-              <Brain className="w-8 h-8 text-white/80" />
-            </div>
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-black border border-blue-500/50 backdrop-blur-xl flex items-center justify-center z-20 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+              animate={{
+                boxShadow: ['0 0 30px rgba(59,130,246,0.3)', '0 0 60px rgba(139,92,246,0.5)', '0 0 30px rgba(59,130,246,0.3)'],
+                scale: [1, 1.05, 1]
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Brain className="w-10 h-10 text-white/90" />
+            </motion.div>
 
           </div>
         </div>

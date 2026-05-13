@@ -95,23 +95,48 @@ export function FeaturesSection() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.1,
+              }
+            }
+          }}
+        >
           {FEATURES.map((feature, index) => (
-            <GlassCard
+            <motion.div
               key={index}
-              delay={index * 0.1}
-              className="p-8 h-full"
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.95 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { type: 'spring', bounce: 0.2, duration: 0.8 }
+                }
+              }}
             >
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-                <feature.icon className="w-6 h-6 text-white/80" />
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-              <p className="text-white/50 leading-relaxed text-sm">
-                {feature.description}
-              </p>
-            </GlassCard>
+              <GlassCard className="p-8 h-full group/icon">
+                <motion.div
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 transition-colors duration-500 group-hover/icon:bg-blue-500/20 group-hover/icon:border-blue-500/50 relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500" />
+                  <feature.icon className="w-6 h-6 text-white/80 relative z-10 group-hover/icon:text-blue-300 transition-colors duration-300 group-hover/icon:scale-110 transform" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                <p className="text-white/50 leading-relaxed text-sm group-hover/icon:text-white/70 transition-colors duration-300">
+                  {feature.description}
+                </p>
+              </GlassCard>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
       </div>
     </section>
