@@ -2,51 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;600&family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600&display=swap');
 
-  --primary: 59, 130, 246; /* blue-500 */
-  --primary-glow: 59, 130, 246, 0.5;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer base {
-  body {
-    color: rgb(var(--foreground-rgb));
-    background: rgb(var(--background-start-rgb));
-    font-family: var(--font-sans), system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-blue-500;
+body {
+  background: #0f0f0f;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-lora {
+  font-family: 'Lora', serif;
+}
+
+.font-crimson {
+  font-family: 'Crimson Text', serif;
+}
+
+/* Smooth scroll animations */
+section {
+  scroll-snap-align: start;
+}
+
+/* Tailwind custom colors */
+@layer components {
+  .text-gold {
+    @apply text-[#d4af37];
   }
 
-  .glass-panel {
-    @apply bg-white/5 border border-white/10 backdrop-blur-xl;
+  .bg-dust-brown {
+    @apply bg-[#5a4a3a];
   }
 
-  .glow-effect {
-    box-shadow: 0 0 40px rgba(var(--primary-glow));
-  }
-
-  .glow-border {
-    position: relative;
-  }
-  .glow-border::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(59,130,246,0.5), rgba(255,255,255,0.1));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+  .bg-rust-red {
+    @apply bg-[#8b4513];
   }
 }
